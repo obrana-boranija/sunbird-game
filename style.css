@@ -1,66 +1,1036 @@
+/* ==========================================================================
+   Sunbird — https://sunbird.tridesetri.com
+
+   One stylesheet for the whole site. No framework, no build step — the
+   same rule the game itself is written under.
+
+   The palette is not invented here. Every colour below is lifted from
+   what the game actually draws: the night keyframe of SKY in
+   src/core/catalogue.js (#141432 -> #35306B), the robin's body (#FFD26F),
+   its beak (#FF8A5C) and wing (#F2A65A), and the six skins in SKINS.
+   When the game's art changes, this file is the second place to look.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Tokens
+   -------------------------------------------------------------------------- */
 :root {
-  --night: #141432;
-  --night-2: #1b1b3f;
-  --gold: #FFD26F;
-  --ink: #e8e6f2;
-  --muted: #9d9ab8;
-  --rule: #2b2b52;
+  /* Ground: the night sky, pushed a shade darker than the game so that
+     screenshots of the game read as light against it. */
+  --night-900: #06061A;
+  --night-800: #10102A;
+  --night-700: #141432;
+  --night-600: #1D1A3E;
+  --night-500: #26224E;
+  --violet-700: #35306B;
+  --violet-500: #6C5B9E;
+
+  /* The sun the bird is carrying. */
+  --gold-100: #FFF3C4;
+  --gold:     #FFD26F;
+  --amber:    #F2A65A;
+  --ember:    #FF8A5C;
+
+  --ink:      #F2F0FC;
+  --ink-2:    #C9C5E4;
+  --muted:    #928EB6;
+
+  --line:       rgba(255, 255, 255, .085);
+  --line-soft:  rgba(255, 255, 255, .05);
+  --line-lit:   rgba(255, 255, 255, .18);
+  --glass:      rgba(255, 255, 255, .04);
+  --glass-lit:  rgba(255, 255, 255, .07);
+
+  --grad-sun:  linear-gradient(135deg, #FFF3C4 0%, #FFD26F 42%, #FF8A5C 100%);
+  --grad-text: linear-gradient(105deg, #FFF3C4 0%, #FFD26F 40%, #FF9E7D 100%);
+  --grad-edge: linear-gradient(90deg, transparent, rgba(255, 210, 111, .45), transparent);
+
+  --glow-sun:  0 0 45px rgba(255, 210, 111, .28);
+  --glow-deep: 0 24px 70px -20px rgba(0, 0, 0, .85);
+
+  --r:    16px;
+  --r-lg: 22px;
+  --r-xl: 30px;
+
+  --shell: 74rem;
+  --prose: 44rem;
+
+  --ease: cubic-bezier(.22, .61, .36, 1);
+
+  --font: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+  --font-mark: "Fredoka", "Inter", -apple-system, "Segoe UI", sans-serif;
+
   color-scheme: dark;
+  accent-color: #FFD26F;
 }
-* { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+
+/* --------------------------------------------------------------------------
+   2. Base
+   -------------------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
+}
+
 body {
   margin: 0;
-  background: var(--night);
+  min-height: 100%;
+  background: var(--night-900);
+  color: var(--ink-2);
+  font-family: var(--font);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  font-weight: 400;
+  letter-spacing: -.006em;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 {
   color: var(--ink);
-  font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: -.032em;
+  line-height: 1.12;
+  margin: 0 0 .75rem;
+  text-wrap: balance;
 }
-.wrap { max-width: 60rem; margin: 0 auto; padding: 0 1.25rem; }
-.prose { max-width: 44rem; }
 
-a { color: var(--gold); }
-a:hover { color: #fff; }
+h1 { font-size: clamp(2.6rem, 6.2vw, 4.15rem); font-weight: 800; }
+h2 { font-size: clamp(1.9rem, 3.9vw, 2.75rem); }
+h3 { font-size: 1.2rem; letter-spacing: -.02em; }
 
-header.hero { padding: 4.5rem 0 3rem; text-align: center; }
+p { margin: 0 0 1.1rem; }
+p:last-child { margin-bottom: 0; }
+
+a {
+  color: var(--gold);
+  text-decoration-color: rgba(255, 210, 111, .35);
+  text-underline-offset: .22em;
+  transition: color .2s var(--ease), text-decoration-color .2s var(--ease);
+}
+a:hover { color: var(--gold-100); text-decoration-color: currentColor; }
+
+img, svg { max-width: 100%; }
+img { height: auto; }
+
+strong { color: var(--ink); font-weight: 600; }
+
+::selection { background: rgba(255, 210, 111, .3); color: #fff; }
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.skip {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 200;
+  padding: .7rem 1.1rem;
+  border-radius: 999px;
+  background: var(--gold);
+  color: #241A3A;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top .2s var(--ease);
+}
+.skip:focus { top: 1rem; color: #241A3A; }
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   3. Layout
+   -------------------------------------------------------------------------- */
+.shell {
+  width: 100%;
+  max-width: var(--shell);
+  margin-inline: auto;
+  padding-inline: clamp(1.15rem, 4vw, 2.5rem);
+}
+
+.section { padding-block: clamp(4.5rem, 10vw, 8rem); position: relative; }
+.section--tight { padding-block: clamp(3rem, 6vw, 5rem); }
+
+.head { max-width: 46rem; margin-bottom: clamp(2.5rem, 5vw, 3.75rem); }
+.head--center { margin-inline: auto; text-align: center; }
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  margin: 0 0 1rem;
+  font-size: .74rem;
+  font-weight: 600;
+  letter-spacing: .19em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.eyebrow::before {
+  content: "";
+  width: 1.6rem; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold));
+}
+.head--center .eyebrow::after {
+  content: "";
+  width: 1.6rem; height: 1px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+}
+
+.lede {
+  font-size: clamp(1.05rem, 1.9vw, 1.22rem);
+  color: var(--ink-2);
+  max-width: 40rem;
+  margin-bottom: 0;
+}
+.head--center .lede { margin-inline: auto; }
+
+.gradient {
+  background: var(--grad-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* --------------------------------------------------------------------------
+   4. Ambient sky — the layer everything sits on
+   -------------------------------------------------------------------------- */
+.sky {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(120% 80% at 50% -10%, rgba(53, 48, 107, .55) 0%, transparent 60%),
+    radial-gradient(90% 60% at 100% 0%, rgba(108, 91, 158, .28) 0%, transparent 55%),
+    linear-gradient(180deg, var(--night-800) 0%, var(--night-900) 45%, #050514 100%);
+}
+
+/* Three coprime tiles, so the star field never reads as a grid. */
+.sky::before {
+  content: "";
+  position: absolute;
+  inset: -10%;
+  background-image:
+    radial-gradient(1.1px 1.1px at 40px 62px,  rgba(255, 246, 216, .95), transparent 60%),
+    radial-gradient(1.5px 1.5px at 133px 24px, rgba(255, 246, 216, .62), transparent 60%),
+    radial-gradient(1px   1px   at 91px 197px, rgba(255, 246, 216, .45), transparent 60%);
+  background-size: 197px 181px, 311px 263px, 433px 379px;
+  animation: twinkle 9s ease-in-out infinite alternate;
+}
+
+/* Two slow suns drifting behind the content. */
+.sky::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(38rem 38rem at 18% 12%, rgba(255, 210, 111, .10), transparent 62%),
+    radial-gradient(34rem 34rem at 86% 68%, rgba(108, 91, 158, .22), transparent 60%);
+  animation: drift 26s ease-in-out infinite;
+}
+
+@keyframes twinkle { from { opacity: .55; } to { opacity: 1; } }
+@keyframes drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50%      { transform: translate3d(0, -2.2rem, 0) scale(1.06); }
+}
+
+/* A hair of film grain, so the flat darks never band. */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+body > *:not(.sky):not(.grain) { position: relative; z-index: 1; }
+
+/* --------------------------------------------------------------------------
+   5. Navigation
+   -------------------------------------------------------------------------- */
+.nav {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 100;
+  padding-block: .85rem;
+  border-bottom: 1px solid transparent;
+  transition: background .3s var(--ease), border-color .3s var(--ease),
+              padding .3s var(--ease);
+}
+.nav.is-stuck {
+  padding-block: .6rem;
+  background: rgba(8, 8, 26, .72);
+  border-bottom-color: var(--line);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  backdrop-filter: blur(18px) saturate(160%);
+}
+
+.nav-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: .7rem;
+  text-decoration: none;
+  color: var(--ink);
+  margin-right: auto;
+}
+.brand img {
+  width: 38px; height: 38px;
+  border-radius: 11px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .5), 0 0 0 1px var(--line);
+}
+.brand b {
+  font-family: var(--font-mark);
+  font-weight: 600;
+  font-size: 1.32rem;
+  letter-spacing: .01em;
+  line-height: 1;
+}
+.brand:hover { color: var(--gold); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: .15rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.nav-links a {
+  display: block;
+  padding: .5rem .85rem;
+  border-radius: 9px;
+  color: var(--ink-2);
+  font-size: .93rem;
+  font-weight: 500;
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: color .2s var(--ease), background .2s var(--ease),
+              border-color .2s var(--ease);
+}
+.nav-links a:hover {
+  color: var(--ink);
+  background: var(--glass-lit);
+  border-color: var(--line);
+}
+
+.nav-cta { margin-left: .5rem; }
+
+.burger {
+  display: none;
+  width: 42px; height: 42px;
+  padding: 0;
+  border-radius: 11px;
+  border: 1px solid var(--line);
+  background: var(--glass);
+  color: var(--ink);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+.burger svg { display: block; }
+.burger .x { display: none; }
+.burger[aria-expanded="true"] .x { display: block; }
+.burger[aria-expanded="true"] .bars { display: none; }
+
+/* --------------------------------------------------------------------------
+   6. Buttons and pills
+   -------------------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  padding: .82rem 1.5rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: .98rem;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform .22s var(--ease), box-shadow .22s var(--ease),
+              background .22s var(--ease), border-color .22s var(--ease),
+              color .22s var(--ease);
+}
+.btn svg { flex: none; }
+
+.btn--sun {
+  background: var(--grad-sun);
+  color: #241A3A;
+  box-shadow: 0 10px 30px -8px rgba(255, 168, 92, .55);
+}
+.btn--sun:hover {
+  color: #241A3A;
+  transform: translateY(-2px);
+  box-shadow: 0 16px 44px -10px rgba(255, 168, 92, .75);
+}
+
+.btn--glass {
+  background: var(--glass);
+  border-color: var(--line-lit);
+  color: var(--ink);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+.btn--glass:hover {
+  color: var(--ink);
+  background: var(--glass-lit);
+  border-color: rgba(255, 210, 111, .45);
+  transform: translateY(-2px);
+}
+
+.btn--sm { padding: .55rem 1.05rem; font-size: .88rem; }
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .45rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  font-size: .85rem;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.pill b { color: var(--gold); font-weight: 600; }
+.pill .dot {
+  position: relative;
+  width: .5rem; height: .5rem;
+  border-radius: 50%;
+  background: var(--gold);
+}
+.pill .dot::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: rgba(255, 210, 111, .18);
+  animation: pulse 2.6s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1);   opacity: 1; }
+  50%      { transform: scale(1.9); opacity: 0; }
+}
+
+/* --------------------------------------------------------------------------
+   7. Glass card — the one surface everything else is built from
+   -------------------------------------------------------------------------- */
+.card {
+  position: relative;
+  padding: clamp(1.5rem, 2.6vw, 2rem);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: linear-gradient(150deg, rgba(255, 255, 255, .055), rgba(255, 255, 255, .015));
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 10px 34px -18px rgba(0, 0, 0, .8);
+  transition: transform .3s var(--ease), border-color .3s var(--ease),
+              box-shadow .3s var(--ease);
+  overflow: hidden;
+}
+/* A sun rising just off the top-left corner, on hover. */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: radial-gradient(22rem 14rem at 0% 0%, rgba(255, 210, 111, .13), transparent 65%);
+  opacity: 0;
+  transition: opacity .35s var(--ease);
+  pointer-events: none;
+}
+.card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 210, 111, .3);
+  box-shadow: 0 22px 50px -22px rgba(0, 0, 0, .9), var(--glow-sun);
+}
+.card:hover::before { opacity: 1; }
+.card > * { position: relative; }
+
+.card h3 { margin-bottom: .5rem; }
+.card p { color: var(--ink-2); font-size: .99rem; margin-bottom: 0; }
+
 .icon {
-  width: 112px; height: 112px; border-radius: 26px; display: block; margin: 0 auto 1.5rem;
-  box-shadow: 0 12px 40px rgba(0,0,0,.55);
+  display: grid;
+  place-items: center;
+  width: 46px; height: 46px;
+  margin-bottom: 1.15rem;
+  border-radius: 13px;
+  background: var(--grad-sun);
+  color: #241A3A;
+  box-shadow: 0 8px 22px -8px rgba(255, 168, 92, .7);
 }
-h1 { font-size: clamp(2.4rem, 7vw, 3.6rem); line-height: 1.05; margin: 0 0 .5rem; color: var(--gold); letter-spacing: -.02em; }
-.tagline { font-size: clamp(1.05rem, 3vw, 1.35rem); color: var(--ink); margin: 0 0 .75rem; }
-.status { color: var(--muted); margin: 0; font-size: .95rem; }
 
-main.prose { padding-top: 3rem; }
-.prose h1 { font-size: clamp(1.8rem, 5vw, 2.3rem); color: var(--gold); margin: 0 0 .25rem; line-height: 1.15; }
+/* --------------------------------------------------------------------------
+   8. Hero
+   -------------------------------------------------------------------------- */
+.hero {
+  position: relative;
+  padding-top: clamp(7rem, 13vw, 9.5rem);
+  padding-bottom: clamp(3.5rem, 8vw, 5.5rem);
+}
 
-h2 { font-size: 1.35rem; color: var(--gold); margin: 3rem 0 .6rem; }
-h3 { font-size: 1.05rem; color: var(--ink); margin: 2rem 0 .4rem; }
-p { margin: 0 0 1rem; }
+.hero-grid {
+  display: grid;
+  gap: clamp(2.5rem, 6vw, 4.5rem);
+  align-items: center;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+}
 
+.hero h1 { margin: 1.25rem 0; }
+.hero h1 .line { display: block; }
+
+.hero-lede {
+  font-size: clamp(1.08rem, 2.1vw, 1.3rem);
+  color: var(--ink-2);
+  max-width: 34rem;
+  margin-bottom: 2rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .85rem;
+  margin-bottom: 1.9rem;
+}
+
+.hero-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: .9rem;
+  color: var(--muted);
+}
+.hero-facts li { display: inline-flex; align-items: center; gap: .5rem; }
+.hero-facts svg { color: var(--gold); flex: none; }
+
+/* --- the phone --- */
+.stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+}
+.stage::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  /* Exactly the column, never wider: a percentage over 100 here is what
+     puts a horizontal scrollbar on a narrow phone. */
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 210, 111, .19) 0%, rgba(108, 91, 158, .14) 40%, transparent 68%);
+  filter: blur(6px);
+}
+
+.phone {
+  position: relative;
+  /* A 9:19.5 phone is tall: much wider than this and the hero stops
+     fitting on a laptop screen. */
+  width: min(276px, 72vw);
+  aspect-ratio: 1080 / 2340;
+  padding: .5rem;
+  border-radius: 2.3rem;
+  background: linear-gradient(160deg, rgba(255, 255, 255, .22), rgba(255, 255, 255, .04) 42%, rgba(255, 255, 255, .14));
+  box-shadow: var(--glow-deep), 0 0 0 1px rgba(255, 255, 255, .06) inset,
+              0 0 60px -12px rgba(255, 210, 111, .28);
+}
+.phone img {
+  width: 100%; height: 100%;
+  display: block;
+  object-fit: cover;
+  border-radius: 1.95rem;
+  background: var(--night-700);
+}
+/* the speaker slot */
+.phone::after {
+  content: "";
+  position: absolute;
+  top: 1.05rem; left: 50%;
+  width: 3.4rem; height: .3rem;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, .55);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .06);
+}
+.phone--float { animation: bob 7s ease-in-out infinite; }
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-14px); }
+}
+
+/* Floating HUD chips, quoting the real HUD. */
+.chip {
+  position: absolute;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .55rem .9rem;
+  border: 1px solid var(--line-lit);
+  border-radius: 999px;
+  background: rgba(12, 12, 34, .72);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 14px 34px -14px rgba(0, 0, 0, .9);
+  font-size: .84rem;
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.chip small { color: var(--muted); font-weight: 500; font-size: .78rem; }
+.chip--a { top: 15%; left: -1.5rem; animation: bob 7s ease-in-out infinite .8s; }
+.chip--b { bottom: 18%; right: -1.25rem; animation: bob 7s ease-in-out infinite 1.6s; }
+.chip .spark { color: var(--gold); }
+.chip .ember { color: var(--ember); }
+
+/* --------------------------------------------------------------------------
+   9. The day bar — the sky cycle, drawn from the same four keyframes
+   -------------------------------------------------------------------------- */
+.daybar { position: relative; margin-top: clamp(2rem, 4vw, 3rem); }
+
+.daybar-track {
+  position: relative;
+  height: clamp(3.2rem, 7vw, 4.6rem);
+  border-radius: var(--r);
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, .28), transparent 45%, rgba(0, 0, 0, .3)),
+    linear-gradient(90deg,
+      #8FD3E8 0%, #FFEAB0 11%,
+      #6C5B9E 27%, #FF9E7D 40%,
+      #141432 54%, #35306B 65%,
+      #5A7FB8 81%, #FFD9A0 92%,
+      #8FD3E8 100%);
+  box-shadow: 0 18px 44px -22px rgba(0, 0, 0, .9);
+}
+.daybar-track i {
+  position: absolute;
+  top: 0; bottom: 0;
+  left: var(--at);
+  width: 1px;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, .5);
+  box-shadow: 0 0 8px rgba(0, 0, 0, .45);
+}
+/* The runner spans the track, so translateX(100%) is exactly one
+   crossing — a transform the compositor can run without relayout. */
+.daybar-runner {
+  position: absolute;
+  top: 0; bottom: 0; left: 0;
+  width: 100%;
+  animation: fly-day 34s linear infinite;
+}
+.daybar-bird {
+  position: absolute;
+  top: 50%; left: 0;
+  width: .68rem; height: .68rem;
+  margin: -.34rem 0 0 -.34rem;
+  border-radius: 50%;
+  background: #FFF6D8;
+  box-shadow: 0 0 0 .3rem rgba(255, 246, 216, .22), 0 0 22px rgba(255, 246, 216, .9);
+}
+@keyframes fly-day {
+  from { transform: translateX(0); }
+  to   { transform: translateX(100%); }
+}
+
+.daybar-marks {
+  position: relative;
+  height: 3.4rem;
+  margin: .7rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.daybar-marks li {
+  position: absolute;
+  left: var(--at);
+  transform: translateX(-50%);
+  text-align: center;
+  line-height: 1.35;
+}
+.daybar-marks li:first-child { transform: translateX(0); text-align: left; }
+.daybar-marks li:last-child  { transform: translateX(-100%); text-align: right; }
+.daybar-marks b {
+  display: block;
+  font-size: .95rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -.01em;
+}
+.daybar-marks span {
+  font-size: .78rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* --------------------------------------------------------------------------
+   10. Steps
+   -------------------------------------------------------------------------- */
+.steps {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.4rem);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.step-n {
+  display: grid;
+  place-items: center;
+  width: 2.9rem; height: 2.9rem;
+  margin-bottom: 1.1rem;
+  border-radius: 50%;
+  background: var(--grad-sun);
+  color: #241A3A;
+  font-size: 1.05rem;
+  font-weight: 700;
+  box-shadow: 0 10px 26px -10px rgba(255, 168, 92, .8);
+}
+.step h3 { margin-bottom: .4rem; }
+.step p { color: var(--ink-2); font-size: .97rem; margin: 0; }
+
+/* --------------------------------------------------------------------------
+   11. Feature grid
+   -------------------------------------------------------------------------- */
+.grid {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.4rem);
+  grid-template-columns: repeat(auto-fit, minmax(17.5rem, 1fr));
+}
+
+/* --------------------------------------------------------------------------
+   12. The roost
+   -------------------------------------------------------------------------- */
+.roost {
+  display: grid;
+  gap: clamp(.8rem, 1.6vw, 1.1rem);
+  grid-template-columns: repeat(auto-fit, minmax(10.25rem, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.bird {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  padding: .9rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--glass);
+  transition: border-color .25s var(--ease), transform .25s var(--ease);
+}
+.bird:hover { transform: translateY(-3px); border-color: var(--line-lit); }
+.bird .egg {
+  flex: none;
+  width: 2.1rem; height: 2.1rem;
+  border-radius: 50%;
+  background: var(--body);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .35) inset, 0 0 18px -3px var(--body);
+}
+.bird b { display: block; color: var(--ink); font-size: .97rem; font-weight: 600; line-height: 1.3; }
+.bird span { display: block; font-size: .8rem; color: var(--muted); line-height: 1.35; }
+.bird--locked .egg { background: #6E6A87; box-shadow: none; }
+
+/* --------------------------------------------------------------------------
+   13. Gallery
+   -------------------------------------------------------------------------- */
 .shots {
-  display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  margin: 3rem 0 1rem; padding: 0; list-style: none;
+  display: grid;
+  gap: clamp(1.4rem, 3.5vw, 2.5rem);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  justify-items: center;
 }
-.shots img {
-  width: 100%; height: auto; display: block; border-radius: 14px;
-  border: 1px solid var(--rule); background: var(--night-2);
+.shot { margin: 0; text-align: center; max-width: 22rem; }
+.shot .phone { width: 100%; }
+.shot figcaption {
+  margin-top: 1.1rem;
+  font-size: .95rem;
+  font-weight: 500;
+  color: var(--ink);
 }
-.shots figcaption { color: var(--muted); font-size: .88rem; margin-top: .5rem; text-align: center; }
-.shots figure { margin: 0; }
+.shot figcaption small {
+  display: block;
+  margin-top: .15rem;
+  font-size: .84rem;
+  font-weight: 400;
+  color: var(--muted);
+}
 
-.features { display: grid; gap: 1.5rem 2.5rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); margin: 1rem 0 0; }
-.features h3 { margin-top: 0; }
-.features p { color: #cfcce3; }
+/* --------------------------------------------------------------------------
+   14. Promises
+   -------------------------------------------------------------------------- */
+.promises {
+  display: grid;
+  gap: clamp(1rem, 2vw, 1.4rem);
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.promise .icon { width: 40px; height: 40px; margin-bottom: .95rem; border-radius: 11px; }
+.promise b { display: block; color: var(--ink); font-size: 1.05rem; font-weight: 600; margin-bottom: .3rem; }
+.promise span { font-size: .95rem; color: var(--ink-2); }
 
-hr { border: 0; border-top: 1px solid var(--rule); margin: 3.5rem 0 2rem; }
+/* --------------------------------------------------------------------------
+   15. Closing call
+   -------------------------------------------------------------------------- */
+.call {
+  position: relative;
+  padding: clamp(2.75rem, 6vw, 4.5rem) clamp(1.5rem, 5vw, 4rem);
+  border: 1px solid var(--line);
+  border-radius: var(--r-xl);
+  text-align: center;
+  overflow: hidden;
+  background:
+    radial-gradient(60rem 26rem at 50% -20%, rgba(255, 210, 111, .16), transparent 65%),
+    linear-gradient(150deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .015));
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  box-shadow: var(--glow-deep);
+}
+.call::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: var(--grad-edge);
+}
+.call h2 { margin-bottom: .9rem; }
+.call .lede { margin-inline: auto; margin-bottom: 2rem; }
+.call .hero-actions { justify-content: center; margin-bottom: 1.25rem; }
+.call-note { font-size: .9rem; color: var(--muted); margin: 0; }
 
-ul { padding-left: 1.25rem; }
-li { margin: .35rem 0; }
-address { font-style: normal; color: #c9c6de; }
+.call-mark {
+  width: 72px; height: 72px;
+  margin: 0 auto 1.5rem;
+  border-radius: 20px;
+  display: block;
+  box-shadow: 0 18px 44px -16px rgba(0, 0, 0, .9), 0 0 0 1px var(--line);
+}
 
-footer { padding: 1rem 0 4rem; color: var(--muted); font-size: .9rem; }
-footer a { color: var(--muted); text-decoration: underline; }
-footer a:hover { color: var(--gold); }
+/* --------------------------------------------------------------------------
+   16. Footer
+   -------------------------------------------------------------------------- */
+.foot {
+  margin-top: clamp(3.5rem, 8vw, 6rem);
+  border-top: 1px solid var(--line-soft);
+  padding-block: clamp(2.5rem, 5vw, 3.5rem);
+  font-size: .93rem;
+}
+.foot-grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(0, 1fr));
+  align-items: start;
+}
+.foot h4 {
+  font-size: .74rem;
+  font-weight: 600;
+  letter-spacing: .17em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: .9rem;
+}
+.foot ul { list-style: none; margin: 0; padding: 0; }
+.foot li { margin-bottom: .45rem; }
+.foot a { color: var(--ink-2); text-decoration: none; }
+.foot a:hover { color: var(--gold); }
+.foot address { font-style: normal; color: var(--muted); line-height: 1.65; }
+.foot .brand { margin: 0 0 1rem; }
+.foot-lede { color: var(--muted); max-width: 24rem; margin: 0; }
+.foot-base {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem 1.5rem;
+  justify-content: space-between;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--line-soft);
+  color: var(--muted);
+  font-size: .87rem;
+}
+.foot-base p { margin: 0; }
 
-.updated { color: var(--muted); margin: 0 0 2rem; }
-.back { display: inline-block; margin: 0 0 2rem; font-size: .92rem; }
+/* --------------------------------------------------------------------------
+   17. Legal page
+   -------------------------------------------------------------------------- */
+/* The head shares the article's column so the title, the date and the
+   first paragraph all start on one left edge. */
+.page-head {
+  max-width: var(--prose);
+  padding-top: clamp(7.5rem, 14vw, 10rem);
+  padding-bottom: clamp(1.5rem, 3vw, 2.25rem);
+}
+.page-head h1 { font-size: clamp(2.1rem, 5vw, 3.1rem); margin-bottom: 1rem; }
+
+.legal {
+  max-width: var(--prose);
+  padding-bottom: clamp(3rem, 7vw, 5rem);
+}
+.legal h2 {
+  font-size: clamp(1.3rem, 2.6vw, 1.6rem);
+  margin: 3rem 0 .9rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--line-soft);
+}
+.legal h2:first-of-type { border-top: 0; padding-top: 0; margin-top: 0; }
+.legal ul { padding-left: 1.15rem; margin: 0 0 1.1rem; }
+.legal li { margin-bottom: .45rem; }
+.legal li::marker { color: var(--gold); }
+.legal address { font-style: normal; color: var(--ink-2); }
+.legal a { word-break: break-word; }
+
+.tldr {
+  padding: clamp(1.4rem, 3vw, 1.9rem);
+  border: 1px solid rgba(255, 210, 111, .28);
+  border-radius: var(--r-lg);
+  background:
+    radial-gradient(30rem 12rem at 0% 0%, rgba(255, 210, 111, .1), transparent 65%),
+    var(--glass);
+  margin-bottom: 2.75rem;
+}
+.tldr h2 { margin: 0 0 .6rem; padding: 0; border: 0; font-size: 1.15rem; }
+.tldr p:last-child { margin-bottom: 0; }
+
+/* 404 — centred in the shell, not in the prose column, so it lines up
+   with the brand rather than with a document that is not there. */
+.miss {
+  min-height: 60vh;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  text-align: center;
+  padding-top: clamp(7rem, 13vw, 9.5rem);
+  padding-bottom: clamp(3rem, 6vw, 5rem);
+}
+.miss .lede { margin-inline: auto; }
+.miss .eyebrow::after {
+  content: "";
+  width: 1.6rem; height: 1px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+}
+.miss .hero-actions { justify-content: center; margin: 2rem 0 0; }
+
+.crumb {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  font-size: .9rem;
+  font-weight: 500;
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   18. Reveal on scroll
+   -------------------------------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity .7s var(--ease), transform .7s var(--ease);
+  transition-delay: var(--delay, 0ms);
+}
+.reveal.is-in { opacity: 1; transform: none; }
+html.no-js .reveal { opacity: 1; transform: none; }
+
+/* --------------------------------------------------------------------------
+   19. Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 62rem) {
+  .hero-grid { grid-template-columns: 1fr; text-align: center; }
+  .hero-lede, .hero-facts { margin-inline: auto; }
+  .hero-actions, .hero-facts { justify-content: center; }
+  .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .shots { grid-template-columns: 1fr; }
+  .foot-grid { grid-template-columns: 1fr 1fr; }
+  .foot-grid > :first-child { grid-column: 1 / -1; }
+}
+
+@media (max-width: 48rem) {
+  .burger { display: inline-flex; }
+  .nav-links {
+    position: absolute;
+    inset: calc(100% + .9rem) 0 auto;
+    flex-direction: column;
+    align-items: stretch;
+    gap: .2rem;
+    padding: .6rem;
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    background: rgba(9, 9, 28, .96);
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+    box-shadow: var(--glow-deep);
+    display: none;
+  }
+  .nav-links.is-open { display: flex; }
+  .nav-links a { padding: .7rem .9rem; font-size: 1rem; }
+  .nav-cta { display: none; }
+  .chip--a { left: -.25rem; }
+  .chip--b { right: -.25rem; }
+  .steps { grid-template-columns: 1fr; }
+  .daybar-marks li:nth-child(2), .daybar-marks li:nth-child(4) { display: none; }
+}
+
+@media (max-width: 34rem) {
+  .hero-actions { flex-direction: column; align-items: stretch; }
+  .hero-actions .btn { width: 100%; }
+  .foot-grid { grid-template-columns: 1fr; }
+}
+
+/* --------------------------------------------------------------------------
+   20. Motion, print
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+  .daybar-runner { display: none; }
+}
+
+@media print {
+  .sky, .grain, .nav, .call, .daybar { display: none !important; }
+  body { background: #fff; color: #000; }
+  h1, h2, h3, strong { color: #000; }
+  a { color: #000; }
+}

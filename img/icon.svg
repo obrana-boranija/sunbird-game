@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The Sunbird mark: the robin carrying the sun through the night.
+
+     The bird is a 1:1 port of drawBird() in src/render/creatures.js
+     (R=15, resting wing pose, robin skin), so the favicon can never
+     drift from the bird the game actually draws. The sky, sun glow and
+     hills quote the night keyframe in src/core/config.js. Raster
+     renditions (PNG favicons, launcher icons, store art) come from
+     `npm run icons`, which draws the same composition through the real
+     drawBird(); keep the two in step when either changes. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#141432"/>
+      <stop offset="1" stop-color="#35306B"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="0.5" cy="0.45" r="0.62">
+      <stop offset="0" stop-color="#FFF3C4"/>
+      <stop offset="1" stop-color="#FFD26F"/>
+    </radialGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0.55" stop-color="#FFD26F" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#FFD26F" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="tile"><rect width="128" height="128" rx="28"/></clipPath>
+  </defs>
+  <g clip-path="url(#tile)">
+    <rect width="128" height="128" fill="url(#sky)"/>
+    <g fill="#FFF6D8">
+      <circle cx="12" cy="15" r="1.6" opacity="0.85"/>
+      <circle cx="27" cy="9" r="1.2" opacity="0.6"/>
+      <circle cx="45" cy="19" r="1.4" opacity="0.75"/>
+      <circle cx="88" cy="11" r="1.7" opacity="0.9"/>
+      <circle cx="108" cy="20" r="1.2" opacity="0.6"/>
+      <circle cx="117" cy="40" r="1.5" opacity="0.8"/>
+      <circle cx="15" cy="41" r="1.2" opacity="0.55"/>
+      <circle cx="104" cy="65" r="1.4" opacity="0.7"/>
+      <circle cx="9" cy="70" r="1.5" opacity="0.75"/>
+    </g>
+    <!-- the sun rises up-right behind the bird, which flies against
+         the night sky and clips only the rim, backlit -->
+    <circle cx="82.5" cy="41.25" r="45.6" fill="url(#glow)"/>
+    <circle cx="82.5" cy="41.25" r="28.1" fill="url(#sun)"/>
+    <path fill="#26224E" d="M0 128 L0 110
+      Q 10 94 21 110 Q 32 94 43 110 Q 54 94 64 110
+      Q 75 94 86 110 Q 96 94 107 110 Q 118 94 128 110
+      L128 128 Z"/>
+    <path fill="#1D1A3E" d="M0 128 L0 117
+      Q 8 106 16 117 Q 24 106 32 117 Q 40 106 48 117 Q 56 106 64 117
+      Q 72 106 80 117 Q 88 106 96 117 Q 104 106 112 117 Q 120 106 128 117
+      L128 128 Z"/>
+    <rect y="119" width="128" height="9" fill="#171533"/>
+    <!-- drawBird(), resting pose: tail, body, belly, wing, eye, beak -->
+    <g transform="translate(53.75 70) scale(1.275)"
+       stroke="#212A42" stroke-opacity="0.6" stroke-width="2.4"
+       stroke-linejoin="round">
+      <path fill="#F2A65A" d="M-12 -4 L-24 -8 L-20 -1 L-25 5 L-12 5 Z"/>
+      <circle r="15" fill="#FFD26F"/>
+      <circle cx="-2.5" cy="5.5" r="8.7" fill="#FFF3D6" stroke="none"/>
+      <g transform="translate(-4 1) rotate(-28.65)">
+        <ellipse cx="-4" rx="9.5" ry="6" fill="#F2A65A"
+                 transform="rotate(-11.46 -4 0)"/>
+      </g>
+      <circle cx="6" cy="-4.5" r="4.8" fill="#FFFFFF" stroke="none"/>
+      <circle cx="7.5" cy="-4.5" r="2.2" fill="#2B3550" stroke="none"/>
+      <circle cx="8.3" cy="-5.4" r="0.9" fill="#FFFFFF" opacity="0.9" stroke="none"/>
+      <path fill="#FF8A5C" d="M13 -1.5 L24 2 L13 5.5 Z"/>
+    </g>
+  </g>
+</svg>
