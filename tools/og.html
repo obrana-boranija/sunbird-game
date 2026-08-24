@@ -1,0 +1,110 @@
+<!doctype html>
+<!-- The source of img/og.png — the 1200x630 card that Slack, WhatsApp,
+     X and Google show when the site is shared.
+
+     It is a page rather than an image so it can be regenerated after any
+     copy or palette change:
+
+       node tools/og.mjs
+
+     which shoots this file at 1200x630 with Playwright. Keep the body
+     size below fixed; the shot is not scaled. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Inter:wght@400;500;600;700;800&display=swap">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1200px; height: 630px;
+    position: relative; overflow: hidden;
+    font-family: "Inter", system-ui, sans-serif;
+    color: #F2F0FC;
+    background:
+      radial-gradient(52rem 34rem at 78% 42%, rgba(255,210,111,.20), transparent 62%),
+      radial-gradient(46rem 30rem at 8% 4%, rgba(108,91,158,.42), transparent 60%),
+      linear-gradient(165deg, #141432 0%, #0A0A22 52%, #050514 100%);
+  }
+  .stars {
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(1.3px 1.3px at 40px 62px,  rgba(255,246,216,.95), transparent 60%),
+      radial-gradient(1.8px 1.8px at 133px 24px, rgba(255,246,216,.6), transparent 60%),
+      radial-gradient(1.2px 1.2px at 91px 197px, rgba(255,246,216,.42), transparent 60%);
+    background-size: 197px 181px, 311px 263px, 433px 379px;
+  }
+  .copy {
+    position: absolute; inset: 0 auto 0 0;
+    width: 730px; padding: 74px 0 74px 78px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .mark { display: flex; align-items: center; gap: 18px; margin-bottom: 30px; }
+  .mark img { width: 76px; height: 76px; border-radius: 21px; box-shadow: 0 14px 34px rgba(0,0,0,.6); }
+  .mark b {
+    font-family: "Fredoka", sans-serif; font-weight: 600;
+    font-size: 60px; letter-spacing: .5px; line-height: 1;
+    background: linear-gradient(105deg, #FFF3C4 0%, #FFD26F 42%, #FF9E7D 100%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  h1 {
+    font-size: 62px; font-weight: 800; line-height: 1.06;
+    letter-spacing: -2.4px; margin-bottom: 22px;
+  }
+  h1 span {
+    background: linear-gradient(105deg, #FFF3C4 0%, #FFD26F 42%, #FF9E7D 100%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  p { font-size: 25px; line-height: 1.45; color: #C9C5E4; max-width: 600px; }
+  ul { list-style: none; display: flex; gap: 12px; margin-top: 34px; }
+  li {
+    padding: 10px 20px; border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.05);
+    font-size: 19px; font-weight: 500; color: #E4E1F5;
+  }
+  .url {
+    position: absolute; left: 78px; bottom: 52px;
+    font-size: 19px; font-weight: 500; letter-spacing: .4px; color: #8E8AB2;
+  }
+  .stage { position: absolute; right: 88px; top: 50%; transform: translateY(-50%) rotate(-6deg); }
+  .glow {
+    position: absolute; right: 40px; top: 50%; width: 620px; height: 620px;
+    transform: translateY(-50%); border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,210,111,.26) 0%, rgba(108,91,158,.16) 42%, transparent 68%);
+  }
+  .phone {
+    position: relative; width: 330px; height: 715px; padding: 8px;
+    border-radius: 42px;
+    background: linear-gradient(160deg, rgba(255,255,255,.24), rgba(255,255,255,.05) 42%, rgba(255,255,255,.16));
+    box-shadow: 0 40px 90px rgba(0,0,0,.75), 0 0 90px -20px rgba(255,210,111,.4);
+  }
+  .phone img { width: 100%; height: 100%; display: block; border-radius: 35px; object-fit: cover; }
+</style>
+</head>
+<body>
+  <div class="stars"></div>
+  <div class="glow"></div>
+
+  <div class="stage">
+    <div class="phone"><img src="../img/4-title.png" alt=""></div>
+  </div>
+
+  <div class="copy">
+    <div class="mark">
+      <img src="../img/icon-512.png" alt="">
+      <b>Sunbird</b>
+    </div>
+    <h1>One tap.<br><span>One more flight.</span></h1>
+    <p>Shave the stones, choose your route, and fly a whole day in a single flight.</p>
+    <ul>
+      <li>One course a day</li>
+      <li>Plays offline</li>
+      <li>No forced ads</li>
+    </ul>
+  </div>
+
+  <div class="url">sunbird.tridesetri.com</div>
+</body>
+</html>
