@@ -13,6 +13,9 @@ has to be regenerated and pushed in the same sitting: the store listing
 points here, and a policy that disagrees with the app is a review
 problem.
 
-Published with GitHub Pages from `main`.
+Published with GitHub Pages from `main`, at
+**https://sunbird.tridesetri.com** — a Cloudflare CNAME to
+`obrana-boranija.github.io`, **DNS only** (no orange cloud): proxying it
+stops GitHub from renewing the Let’s Encrypt certificate.
 
 © 2026 Tridesetri doo Beograd
