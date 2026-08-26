@@ -5,7 +5,9 @@
       "namespace": "android_app",
       "package_name": "com.sunbird.game",
       "sha256_cert_fingerprints": [
-        "42:47:36:B0:65:2C:C5:3F:EC:95:45:56:C9:0E:BC:69:B7:2F:9C:E1:38:C2:AE:28:A9:F6:4F:85:E1:0B:25:F8"
+        "42:47:36:B0:65:2C:C5:3F:EC:95:45:56:C9:0E:BC:69:B7:2F:9C:E1:38:C2:AE:28:A9:F6:4F:85:E1:0B:25:F8",
+        "6E:F6:B3:AE:22:A8:DC:F5:23:56:5F:45:16:F3:A4:E9:F0:7D:6C:11:18:BE:EB:FD:BD:20:0D:C8:E5:E5:57:2F",
+        "2B:55:FD:F7:1E:CF:6A:54:24:50:CB:F4:FF:09:64:60:E7:7D:F4:70:99:B2:6B:68:DB:C2:C5:E5:D2:DE:12:6E"
       ]
     }
   }
