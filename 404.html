@@ -11,7 +11,18 @@
 
 <!-- Root-absolute paths throughout: Pages serves this file for a miss at
      any depth, so a relative href would resolve against the wrong
-     directory. -->
+     directory.
+
+     Which is also what makes this the landing page for a code. /f/CODE
+     and /c/CODE are not files, so every one of them arrives here, and the
+     script at the bottom turns the path into an invitation.
+
+     On an Android phone with the game installed this page is never seen:
+     the App Link is verified against /.well-known/assetlinks.json and the
+     URL goes straight to the app. What it is written for is everybody
+     else — a desktop, an iPhone before Universal Links exist, a phone
+     where verification did not take, and the person the invitation was
+     actually for, who does not have the game yet. -->
 <link rel="icon" href="/img/icon.svg" type="image/svg+xml">
 <link rel="icon" href="/img/icon-512.png" type="image/png" sizes="512x512">
 <link rel="apple-touch-icon" href="/img/icon-512.png">
@@ -20,6 +31,26 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Inter:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="/style.css?v=2">
+
+<!-- One rule, and it lives here rather than in the design system,
+     because this file is copied across from the game repository
+     (store/site/) and a copy that needs a second file edited with it is
+     a copy somebody ships half of. -->
+<style>
+  .miss-code {
+    display: inline-block;
+    margin: 1.6rem 0 .4rem;
+    padding: .7rem 1.15rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: clamp(1.5rem, 7vw, 2.1rem);
+    letter-spacing: .16em;
+    color: var(--gold);
+    background: rgba(255, 210, 111, .1);
+    border: 1px solid rgba(255, 210, 111, .22);
+    border-radius: .7rem;
+  }
+  .miss-how { margin-top: 1.6rem; font-size: .95rem; }
+</style>
 
 <script>document.documentElement.classList.remove('no-js');</script>
 </head>
@@ -38,16 +69,21 @@
 </header>
 
 <main id="main" class="shell miss">
-  <p class="eyebrow">404</p>
-  <h1>Off course.</h1>
-  <p class="lede">
+  <p class="eyebrow" id="eyebrow">404</p>
+  <h1 id="title">Off course.</h1>
+  <p class="lede" id="lead">
     That page is not here — which, to be fair, is what happens to most
     flights. The two that do exist are below.
   </p>
+  <p class="miss-code" id="code" hidden></p>
   <div class="hero-actions">
-    <a class="btn btn--sun" href="/">Back to Sunbird</a>
-    <a class="btn btn--glass" href="/privacy/">Privacy policy</a>
+    <a class="btn btn--sun" id="primary" href="/">Back to Sunbird</a>
+    <a class="btn btn--glass" id="secondary" href="/privacy/">Privacy policy</a>
   </div>
+  <p class="lede miss-how" id="how" hidden>
+    Already have Sunbird? Tap <b>Code</b> on the title screen and type
+    <b id="typed"></b>.
+  </p>
 </main>
 
 <footer class="foot">
@@ -57,6 +93,74 @@
   </div>
 </footer>
 
+<script>
+  /* The path is the message: /f/CODE joins a flock, /c/CODE opens a
+     shared course. Anything else is left exactly as it is above — an
+     ordinary 404, saying nothing about codes to somebody who does not
+     have one.
+
+     The code is shown, not checked. Its checksum is defined once, in the
+     game's www/src/core/codes.js, and held against the server by a
+     contract test that runs that file; a fourth copy of the rule, on a
+     static page in another repository, is a copy that disagrees one day.
+     A code that is one character wrong is refused by the game, in the
+     same words however it arrived. */
+  (function () {
+    var m = location.pathname.match(/^\/(f|c)\/([0-9A-Za-z]{6,7})\/?$/);
+    if (!m) return;
+
+    var kind = m[1];
+    var code = m[2].toUpperCase();
+    var flock = kind === 'f';
+
+    /* Seven characters, grouped four and three: FK7Q-2ME. Never
+       shortened — the leading F is one a player types back, and a page
+       that hides it hands out a code the game refuses. A course code is
+       six and is shown whole. */
+    var shown = flock && code.length === 7
+      ? code.slice(0, 4) + '-' + code.slice(4)
+      : code;
+
+    var set = function (id, text) { document.getElementById(id).textContent = text; };
+    var show = function (id) { document.getElementById(id).hidden = false; };
+
+    set('eyebrow', flock ? 'Invitation' : 'Shared course');
+    set('title', flock ? 'Join this flock.' : 'Fly this course.');
+    set('lead', flock
+      ? 'A private board for whoever holds the code. The same course every day, one tap, and nothing to sign into.'
+      : 'The same stones, in the same places, for everyone who has this code.');
+    set('code', shown);
+    show('code');
+
+    /* The custom scheme, for a phone that has the game but did not
+       verify the link — a sideloaded build, or a Digital Asset Links
+       fetch that failed at install time. Harmless where the App Link did
+       work, because this page is not reached at all then. */
+    var primary = document.getElementById('primary');
+    primary.href = 'sunbird://' + kind + '/' + code;
+    primary.textContent = 'Open in Sunbird';
+
+    /* While the game is not on Play, "get it" is the site's own page
+       rather than a store listing that would answer "item not found". On
+       the day it publishes, set PLAY to
+       'https://play.google.com/store/apps/details?id=com.sunbird.game'
+       and the code rides along as a referrer: Play hands that to the app
+       on first launch through the Install Referrer API, which is what
+       would let an invitation survive an install (ONLINE_PLAN, Phase 3).
+       Nothing reads it yet, and it costs nothing to carry until
+       something does. */
+    var PLAY = '';
+    var secondary = document.getElementById('secondary');
+    secondary.href = PLAY ? PLAY + '&referrer=' + kind + '_' + code : '/#call';
+    secondary.textContent = 'Get Sunbird';
+
+    /* textContent into markup that already exists, never innerHTML: the
+       code came out of a URL, and a page that builds markup out of a URL
+       is the same page with an injection in it two edits later. */
+    set('typed', shown);
+    show('how');
+  })();
+</script>
 <script src="/site.js" defer></script>
 </body>
 </html>

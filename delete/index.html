@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Delete your Sunbird online data</title>
+<meta name="robots" content="noindex">
+<!-- This page collects nothing. It composes an email in the visitor's own
+     client and sends nothing anywhere itself, which is why it needs no
+     cookie banner, no analytics and no privacy notice of its own: there
+     is no form post, no script that phones home, and no third party. -->
+<style>
+  :root { color-scheme: dark; }
+  body {
+    margin: 0; padding: 2.5rem 1.25rem; background: #141432; color: #F1E9D8;
+    font: 17px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  main { max-width: 34rem; margin: 0 auto; }
+  h1 { font-size: 1.6rem; margin: 0 0 1.2rem; color: #FFD26F; }
+  h2 { font-size: 1.1rem; margin: 2rem 0 .6rem; color: #FFD26F; }
+  code, .code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    background: rgba(255, 210, 111, .12); padding: .1em .4em; border-radius: .3em;
+  }
+  input {
+    width: 100%; box-sizing: border-box; margin: .6rem 0 1rem; padding: .7rem .8rem;
+    font: inherit; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    letter-spacing: .12em; text-transform: uppercase; text-align: center;
+    background: #0F0F26; color: #F1E9D8; border: 1px solid #3A3A63; border-radius: .5rem;
+  }
+  a.btn {
+    display: block; text-align: center; padding: .8rem 1rem; border-radius: .5rem;
+    background: #FFD26F; color: #141432; font-weight: 600; text-decoration: none;
+  }
+  a.btn[aria-disabled="true"] { opacity: .45; pointer-events: none; }
+  p.small { color: #A9A3C4; font-size: .92rem; }
+  footer { margin-top: 3rem; color: #A9A3C4; font-size: .88rem; }
+  a { color: #FFD26F; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Delete your Sunbird online data</h1>
+
+  <p>If you still have the game installed, do it there instead — it is
+  immediate and needs no email: <strong>Roost → Online → Delete my
+  online data</strong>.</p>
+
+  <p>If you have already uninstalled, send us your <strong>board
+  id</strong> and we will delete everything stored under it: your player
+  record, every board entry, every flock membership, every inbox message
+  and the Play Games player id we keep as a recovery key. We answer
+  within 7 days, and always within the month the GDPR allows.</p>
+
+  <h2>Your board id</h2>
+  <p class="small">Twelve characters in three groups, shown in the Roost
+  under <em>Online</em>. It is the only thing that links an entry to you:
+  many players share each handle, so we genuinely cannot find your data
+  from a handle alone.</p>
+
+  <label for="board" class="small">Board id</label>
+  <input id="board" inputmode="latin" autocomplete="off" autocapitalize="characters"
+         spellcheck="false" maxlength="14" placeholder="XXXX-XXXX-XXXX"
+         aria-describedby="hint">
+  <a id="send" class="btn" aria-disabled="true" href="#">Compose the email</a>
+  <p id="hint" class="small">This opens your own email app with the
+  message written. Nothing is sent from this page, and this page stores
+  nothing.</p>
+
+  <h2>If you linked Google Play Games</h2>
+  <p class="small">Say so in the email and we will match the stored
+  player id after you sign in once more. We never receive your gamer
+  name, avatar or email address from Google.</p>
+
+  <footer>
+    Tridesetri doo Beograd · Narodnih heroja 43, 11070 Novi Beograd, Serbia<br>
+    <a href="mailto:office@tridesetri.com">office@tridesetri.com</a> ·
+    <a href="/privacy/">Privacy policy</a>
+  </footer>
+</main>
+<script>
+  /* Progressive enhancement only: with scripting off, the footer's
+     mailto link is still a working route and the address is on screen. */
+  (function () {
+    var input = document.getElementById('board');
+    var send = document.getElementById('send');
+    function refresh() {
+      var id = input.value.trim().toUpperCase().replace(/[^0-9A-Z]/g, '');
+      var ok = id.length >= 8;
+      send.setAttribute('aria-disabled', ok ? 'false' : 'true');
+      if (!ok) { send.removeAttribute('href'); return; }
+      var body = 'Please delete the Sunbird online data stored under this board id.'
+        + '\n\nBoard id: ' + id
+        + '\nLinked Google Play Games: (yes / no / not sure)'
+        + '\n\nThank you.';
+      send.href = 'mailto:office@tridesetri.com'
+        + '?subject=' + encodeURIComponent('Sunbird: delete my online data')
+        + '&body=' + encodeURIComponent(body);
+    }
+    input.addEventListener('input', refresh);
+    refresh();
+  })();
+</script>
+</body>
+</html>

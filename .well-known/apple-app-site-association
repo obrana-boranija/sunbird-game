@@ -1,0 +1,13 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["REPLACE_WITH_APPLE_TEAM_ID.com.sunbird.game"],
+        "components": [
+          { "/": "/f/*", "comment": "Join a flock" },
+          { "/": "/c/*", "comment": "Open a shared course" }
+        ]
+      }
+    ]
+  }
+}

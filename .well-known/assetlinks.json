@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.sunbird.game",
+      "sha256_cert_fingerprints": [
+        "42:47:36:B0:65:2C:C5:3F:EC:95:45:56:C9:0E:BC:69:B7:2F:9C:E1:38:C2:AE:28:A9:F6:4F:85:E1:0B:25:F8"
+      ]
+    }
+  }
+]
