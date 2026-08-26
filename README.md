@@ -7,7 +7,13 @@ review.
 ```
 index.html          the landing page
 privacy/index.html  the privacy policy
+delete/index.html   the account-deletion route Play requires
 404.html            a miss at any depth, so its paths are root-absolute
+                    - and, when the path is /f/CODE or /c/CODE, the page
+                      an invitation lands on
+.well-known/        assetlinks.json (Android App Links) and a placeholder
+                      apple-app-site-association
+.nojekyll           also what makes .well-known publish at all
 style.css           the whole design system, one file, no framework
 site.js             nav frosting, the small-screen menu, scroll reveals
 img/                screenshots and brand art, copied from the game repo
@@ -18,6 +24,15 @@ tools/og.mjs        shoots that template at 1200x630
 ```
 
 ## Rules this site is held to
+
+**Four of these files are not authored here.** `404.html`,
+`.well-known/assetlinks.json`, `.well-known/apple-app-site-association`
+and `delete/index.html` are copied from `store/site/` in the (private)
+game repository, where they are reviewed alongside the service they
+support. `404.html` in particular is a **merge**: the design-system page
+below is what a plain miss gets, and the script at the bottom is what
+turns a `/f/` or `/c/` path into an invitation. A redesign has to keep
+that script; an edit to the script has to keep this shell.
 
 **The privacy policy is not authored here.** `store/PRIVACY.md` in the
 (private) game repository is the source of truth. When it changes, this
