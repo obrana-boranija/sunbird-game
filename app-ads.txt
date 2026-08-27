@@ -1,0 +1,20 @@
+# app-ads.txt for Sunbird — com.sunbird.game
+#
+# Served from the root of the developer website named in the Play
+# listing (store/PLAY.md), which is the only place AdMob's crawler
+# looks: https://sunbird.tridesetri.com/app-ads.txt
+#
+# What this does, precisely, so nobody expects more of it: it says which
+# publisher accounts are allowed to sell this app's ad inventory. It is
+# an anti-spoofing measure. It does nothing whatsoever about a cloned
+# game that ships its own AdMob ids — that clone sells its own
+# inventory, not ours. Count it at zero in any anti-clone plan.
+#
+# The publisher id is the one in native/android/AndroidManifest.xml and
+# the three unit ids in www/platform.js; all four share the number.
+# Google's documented line format is
+# `google.com, pub-<id>, DIRECT` (support.google.com/admob/answer/9363762).
+# Confirm against the snippet AdMob generates in the console before
+# trusting this file — the console is the authority, not this comment.
+
+google.com, pub-6651918549813430, DIRECT
