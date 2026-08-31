@@ -17,4 +17,4 @@
 # Confirm against the snippet AdMob generates in the console before
 # trusting this file — the console is the authority, not this comment.
 
-google.com, pub-6651918549813430, DIRECT
+google.com, pub-6651918549813430, DIRECT, f08c47fec0942fa0
